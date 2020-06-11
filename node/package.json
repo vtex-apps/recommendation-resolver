@@ -2,6 +2,9 @@
   "name": "recommendation-resolver",
   "private": true,
   "license": "UNLICENSED",
+  "dependencies": {
+    "vtex.recommendation-graphql": "https://thalyta--biggy.myvtex.com/_v/private/typings/linked/v1/vtex.recommendation-graphql@0.0.1-beta.0+build1591901690/public"
+  },
   "devDependencies": {
     "@types/node": "^12.12.21",
     "@vtex/api": "6.31.1",
@@ -12,7 +15,6 @@
     "lint-staged": "^10.0.2",
     "prettier": "^1.19.1",
     "typescript": "3.8.3",
-    "vtex.messages": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.messages@1.60.2/public/@types/vtex.messages",
-    "vtex.recommendation-resolver": "https://thalyta--biggy.myvtex.com/_v/private/typings/linked/v1/vtex.recommendation-resolver@0.0.0+build1591895333/public/_types/react"
+    "vtex.messages": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.messages@1.60.2/public/@types/vtex.messages"
   }
 }

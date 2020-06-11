@@ -1,5 +1,4 @@
 import { Service, RecorderState, ParamsContext } from '@vtex/api'
-// @ts-ignore
 import schema from 'vtex.recommendation-graphql/graphql'
 
 import { Clients, clients } from './clients'
