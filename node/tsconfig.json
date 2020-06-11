@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "types": ["node"],
+    "target": "es2019",
+    "module": "commonjs",
+    "sourceMap": false,
+    "allowJs": true,
+    "noImplicitThis": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "alwaysStrict": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true
+  },
+  "typeAcquisition": {
+    "enable": false
+  },
+  "include": ["./typings/*.d.ts", "./**/*.ts"],
+  "exclude": ["node_modules"]
+}
