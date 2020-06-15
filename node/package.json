@@ -3,7 +3,7 @@
   "private": true,
   "license": "UNLICENSED",
   "dependencies": {
-    "vtex.recommendation-graphql": "https://thalyta--biggy.myvtex.com/_v/private/typings/linked/v1/vtex.recommendation-graphql@0.0.1-beta.0+build1591901690/public"
+    "vtex.recommendation-graphql": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.1.0/public"
   },
   "devDependencies": {
     "@types/node": "^12.12.21",
