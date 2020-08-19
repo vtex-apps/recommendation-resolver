@@ -5,90 +5,162 @@ import { Clients } from './clients/index'
 declare global {
   type Context = ServiceContext<Clients>
 
-  interface PaidNavigationFilter {
-    filterBingAds: boolean
-    filterGoogleAds: boolean
-    categories: string[]
+  interface SortOption {
+    field: string
+    desc: boolean
   }
 
-  interface UserNavigationInfo {
-    google: boolean
-    bing: boolean
-  }
-
-  interface StoreFrontSettings {
-    minProducts?: number
-    maxProducts?: number
-    paidNavigationFilter?: PaidNavigationFilter
-  }
-
-  interface RecommendationInput {
-    store: string
-    strategy: string
-    secondaryStrategy?: string
-    user?: string
-    anonymousUser?: string
-    products?: string[]
-    categories?: string[]
-    userNavigationInfo?: UserNavigationInfo
-    settings?: StoreFrontSettings
-  }
-
-  interface Category {
-    name: string
-    parent: string
-    originalId: string
-    ancestors: string[]
-  }
-
-  type KeyValueDict = { [key: string]: string }
-  type KeyValueArray = Array<{ key: string; value: string }>
-  type KeyValuePair = KeyValueArray | KeyValueDict
-
-  interface ProductSpec {
-    id: string
-    label: string
+  interface Filter {
     type: string
-    offerId: string
-    subSpecs: ProductSpec[]
-    images: KeyValuePair
+    field: string
+    value: string
   }
 
-  interface ProductRecommendationOffer {
-    offerId: string
-    originalProductId: string
-    sku: string
-    distributionCenter: string
+  type RequestInputType =
+    | 'USER'
+    | 'CATEGORY'
+    | 'PRODUCT'
+    | 'TAG_GROUP'
+    | 'CAMPAIGN'
+    | 'GROUP'
+    | 'ANONYMOUS_USER'
+    | 'BRAND'
+    | 'STORE'
+
+  type StrategyType =
+    | 'BEST_SELLERS'
+    | 'MOST_POPULAR'
+    | 'PRICE_REDUCTION'
+    | 'NEW_RELEASES'
+    | 'NAVIGATION_HISTORY'
+    | 'RECOMMENDATION_HISTORY'
+    | 'SIMILAR_PRODUCTS'
+    | 'BEST_CHOICE'
+    | 'BOUGHT_TOGETHER'
+    | 'CART_HISTORY'
+    | 'ORDER_HISTORY'
+
+  interface RecommendationRequest {
+    strategy: StrategyType
+    input: {
+      type: RequestInputType
+      values: string[]
+    }
+    recommendation: {
+      count: {
+        minimum: number
+        recommendations: number
+      }
+      sort: SortOption[]
+      filter: Filter[]
+    }
+  }
+
+  interface RequestInput {
+    sessionId: string
+    request: RecommendationRequest
+  }
+
+  interface Seller {
     name: string
-    description: string
+    tax: number
+    id: string
+  }
+
+  interface Policy {
+    id: string
+    sellers: Seller[]
+  }
+
+  interface Attribute {
+    key: string
+    value: string
+  }
+
+  interface SKU {
+    reference: string
+    oldPrice: number
+    price: number
+    policies: Policy[]
+    attributes: Attribute[]
+    id: string
+    stock: number
+    sellers: Seller[]
+  }
+
+  interface ExtraData {
+    value: string
+    key: string
+  }
+
+  interface Image {
+    name: string
+    value: string
+  }
+
+  interface Installment {
+    interest: boolean
+    count: number
+    value: number
+  }
+
+  interface Boost {
+    newness: number
+    image: number
+    revenue: number
+    discount: number
+    click: number
+    availableSpecsCount: number
+    promotion: number
+    order: number
+  }
+
+  interface Product {
+    name: string
+    id: string
+    product: string
+    timestamp: number
     url: string
-    imageUrl: string
-    secondaryImageUrl: string
-    price: string
-    oldPrice: string
-    currencySymbol: string
-    hasDiscount: boolean
-    discountPercentage: number
+    link: string
+    description: string
+    reference: string
+    price: number
+    oldPrice: number
+    skus: SKU[]
+    year: number
     brand: string
-    score: number
-    specs: ProductSpec[]
-    categories: Category[]
-    extraInfo: KeyValuePair
-    installment: KeyValuePair
-    imageUrlMap: KeyValuePair
+    brandId: string
+    extraData: ExtraData[]
+    installment: Installment
+    measurementUnit: string
+    unitMultiplier: number
+    tax: number
+    categories: string[] // nomes ou ids?
+    stock: number
+    availableTradePolicies: string[]
+    images: Image[]
+    productSpecifications: string[]
+    categoryIds: string[]
+    boost: Boost
+    // release: number
+    // wear: number
+    // discount: number
+    // showIfNotAvailable: boolean
+    // customSort: number
+    // stickers: any[]
+    // locationAttributes: any[]
+    // specificationGroups: string
   }
 
-  interface ProductRecommendation {
-    productId: string
-    score: number
-    offers: ProductRecommendationOffer[]
-    specs: ProductSpec[]
+  interface Recommendation {
+    base: Product[]
+    recommended: Product[]
   }
 
-  interface APIBasedRecommendation {
-    baseIds: string[]
-    baseItems: ProductRecommendation[]
-    recommendationIds: string[]
-    recommendationItems: ProductRecommendation[]
+  interface RecommendationResponse {
+    variantId: string
+    response: {
+      recommendations: Recommendation[]
+    }
   }
 }
