@@ -6,7 +6,7 @@ class Recommendation extends ExternalClient {
   }
 
   public get = (input: RequestInput, store: string) => {
-    return this.http.post<RecommendationResponse[]>(
+    return this.http.post<RecommendationResponse>(
       `${store}/recommendation`,
       input,
       {

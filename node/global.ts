@@ -16,29 +16,31 @@ declare global {
     value: string
   }
 
-  type RequestInputType =
-    | 'USER'
-    | 'CATEGORY'
-    | 'PRODUCT'
-    | 'TAG_GROUP'
-    | 'CAMPAIGN'
-    | 'GROUP'
-    | 'ANONYMOUS_USER'
-    | 'BRAND'
-    | 'STORE'
+  enum RequestInputType {
+    USER = 'USER',
+    CATEGORY = 'CATEGORY',
+    PRODUCT = 'PRODUCT',
+    TAG_GROUP = 'TAG_GROUP',
+    CAMPAIGN = 'CAMPAIGN',
+    GROUP = 'GROUP',
+    ANONYMOUS_USER = 'ANONYMOUS_USER',
+    BRAND = 'BRAND',
+    STORE = 'STORE',
+  }
 
-  type StrategyType =
-    | 'BEST_SELLERS'
-    | 'MOST_POPULAR'
-    | 'PRICE_REDUCTION'
-    | 'NEW_RELEASES'
-    | 'NAVIGATION_HISTORY'
-    | 'RECOMMENDATION_HISTORY'
-    | 'SIMILAR_PRODUCTS'
-    | 'BEST_CHOICE'
-    | 'BOUGHT_TOGETHER'
-    | 'CART_HISTORY'
-    | 'ORDER_HISTORY'
+  enum StrategyType {
+    BEST_SELLERS = 'BEST_SELLERS',
+    MOST_POPULAR = 'MOST_POPULAR',
+    PRICE_REDUCTION = 'PRICE_REDUCTION',
+    NEW_RELEASES = 'NEW_RELEASES',
+    NAVIGATION_HISTORY = 'NAVIGATION_HISTORY',
+    RECOMMENDATION_HISTORY = 'RECOMMENDATION_HISTORY',
+    SIMILAR_PRODUCTS = 'SIMILAR_PRODUCTS',
+    BEST_CHOICE = 'BEST_CHOICE',
+    BOUGHT_TOGETHER = 'BOUGHT_TOGETHER',
+    CART_HISTORY = 'CART_HISTORY',
+    ORDER_HISTORY = 'ORDER_HISTORY',
+  }
 
   interface RecommendationRequest {
     strategy: StrategyType
@@ -135,21 +137,14 @@ declare global {
     measurementUnit: string
     unitMultiplier: number
     tax: number
-    categories: string[] // nomes ou ids?
+    categories: string[]
     stock: number
     availableTradePolicies: string[]
     images: Image[]
     productSpecifications: string[]
     categoryIds: string[]
     boost: Boost
-    // release: number
-    // wear: number
-    // discount: number
-    // showIfNotAvailable: boolean
-    // customSort: number
-    // stickers: any[]
-    // locationAttributes: any[]
-    // specificationGroups: string
+    specificationGroups: string
   }
 
   interface Recommendation {
