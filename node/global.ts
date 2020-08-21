@@ -158,4 +158,12 @@ declare global {
       recommendations: Recommendation[]
     }
   }
+
+  interface VTEXImage {
+    imageId: string
+    imageLabel: string
+    imageTag: string
+    imageUrl: string
+    imageText: string
+  }
 }
