@@ -11,8 +11,8 @@ declare global {
   }
 
   interface Filter {
-    name: string
-    mode: string
+    field: string
+    condition: string
     value: string
   }
 
