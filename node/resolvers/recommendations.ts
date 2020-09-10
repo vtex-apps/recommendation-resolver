@@ -1,7 +1,11 @@
 import { resolveSKU } from '../utils'
 
 export const queries = {
-  recommendation: async (_: unknown, input: RequestInput, ctx: Context) => {
+  recommendation: async (
+    _: unknown,
+    { input }: { input: RequestInput },
+    ctx: Context
+  ) => {
     const {
       clients: { recommendations },
       vtex: { account },

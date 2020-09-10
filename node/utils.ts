@@ -50,7 +50,6 @@ const buildImages = (productImages: Image[]) => {
   return images
 }
 
-// ver se precisa msm disso tudo
 const buildVariations = (sku: SKU) => {
   const variations = sku.attributes.map(attribute => attribute.key)
   const item: Record<string, string[]> = {}

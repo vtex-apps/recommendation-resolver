@@ -11,8 +11,8 @@ declare global {
   }
 
   interface Filter {
-    type: string
-    field: string
+    name: string
+    mode: string
     value: string
   }
 
@@ -42,10 +42,13 @@ declare global {
     ORDER_HISTORY = 'ORDER_HISTORY',
   }
 
-  interface RecommendationRequest {
+  interface RequestInput {
+    sessionId: string
     strategy: StrategyType
     input: {
-      type: RequestInputType
+      type: {
+        primary: RequestInputType
+      }
       values: string[]
     }
     recommendation: {
@@ -53,14 +56,9 @@ declare global {
         minimum: number
         recommendations: number
       }
-      sort: SortOption[]
-      filter: Filter[]
     }
-  }
-
-  interface RequestInput {
-    sessionId: string
-    request: RecommendationRequest
+    sort: SortOption[]
+    filter: Filter[]
   }
 
   interface Seller {
@@ -81,12 +79,9 @@ declare global {
 
   interface SKU {
     reference: string
-    oldPrice: number
-    price: number
     policies: Policy[]
     attributes: Attribute[]
     id: string
-    stock: number
     sellers: Seller[]
   }
 
@@ -121,7 +116,6 @@ declare global {
     name: string
     id: string
     product: string
-    timestamp: number
     url: string
     link: string
     description: string
@@ -139,7 +133,6 @@ declare global {
     tax: number
     categories: string[]
     stock: number
-    availableTradePolicies: string[]
     images: Image[]
     productSpecifications: string[]
     categoryIds: string[]
