@@ -1,9 +1,22 @@
-import { ServiceContext } from '@vtex/api'
+import {
+  IOContext,
+  ParamsContext,
+  RecorderState,
+  ServiceContext,
+  SegmentData,
+} from '@vtex/api'
 
 import { Clients } from './clients/index'
 
 declare global {
-  type Context = ServiceContext<Clients>
+  type Context = ServiceContext<Clients, RecorderState, CustomContext>
+
+  interface CustomContext extends ParamsContext {
+    vtex: CustomIOContext
+  }
+  interface CustomIOContext extends IOContext {
+    segment?: SegmentData
+  }
 
   interface SortOption {
     field: string

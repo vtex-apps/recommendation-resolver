@@ -19,6 +19,8 @@ const buildCommertialOffer = (
 
   return {
     AvailableQuantity: 10000,
+    discountHighlights: [],
+    teasers: [],
     Installments: installments,
     Price: price,
     ListPrice: oldPrice,
@@ -32,13 +34,15 @@ const baseUrlImageRegex = new RegExp(/.+ids\/(\d+)/)
 
 const buildImages = (productImages: Image[]) => {
   const images: VTEXImage[] = []
+
   productImages.forEach(image => {
-    const id = baseUrlImageRegex.test(image.value)
+    const imageId = baseUrlImageRegex.test(image.value)
       ? baseUrlImageRegex.exec(image.value)![1]
       : undefined
-    id
+
+    imageId
       ? images.push({
-          imageId: id,
+          imageId,
           imageTag: '',
           imageLabel: image.name,
           imageText: image.name,
@@ -66,22 +70,40 @@ const buildVariations = (sku: SKU) => {
   })
 }
 
-export const resolveSKU = (product: Product, sku: SKU) => {
-  const commertialOffer = buildCommertialOffer(
-    product.price,
-    product.oldPrice,
-    product.installment,
-    product.tax
-  )
-  const sellers = [
-    {
-      sellerId: '1',
+const getSellers = (product: Product, sku: SKU, tradePolicy?: string) => {
+  const selectedPolicy = tradePolicy
+    ? sku.policies.find((policy: Policy) => policy.id === tradePolicy)
+    : sku.policies[0]
+
+  const sellers = selectedPolicy?.sellers ?? []
+
+  return sellers.map((seller: any) => {
+    const price = seller.price ?? product.price
+    const oldPrice = seller.oldPrice ?? product.oldPrice
+    const installment = seller.installment ?? product.installment
+
+    return {
+      sellerId: seller.id,
       sellerName: '',
+      commertialOffer: buildCommertialOffer(
+        price,
+        oldPrice,
+        installment,
+        product.tax
+      ),
       addToCartLink: '',
       sellerDefault: false,
-      commertialOffer,
-    },
-  ]
+    }
+  })
+}
+
+export const resolveSKU = (
+  product: Product,
+  sku: SKU,
+  tradePolicy?: string
+) => {
+  const sellers = getSellers(product, sku, tradePolicy)
+
   const item = {
     name: product.name,
     nameComplete: product.name,

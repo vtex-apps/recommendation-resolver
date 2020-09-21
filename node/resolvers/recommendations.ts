@@ -23,8 +23,16 @@ export const fieldResolvers = {
   categories: (product: Product) => product.categories,
   categoriesIds: (product: Product) => product.categoryIds,
   description: (product: Product) => product.description,
-  items: (product: Product) =>
-    (product.skus || []).map(sku => resolveSKU(product, sku)),
+  items: async (product: Product, _: unknown, ctx: Context) => {
+    const {
+      vtex: { segment },
+    } = ctx
+    const tradePolicy = segment?.channel?.toString()
+
+    return (product.skus || []).map(sku =>
+      resolveSKU(product, sku, tradePolicy)
+    )
+  },
   link: (product: Product) => product.link,
   linkText: (product: Product) => product.link,
   priceRange: (product: Product) => {

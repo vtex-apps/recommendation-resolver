@@ -30,6 +30,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/atob@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@types/atob/-/atob-2.1.2.tgz#157eb0cc46264a8c55f2273a836c7a1a644fb820"
+  integrity sha512-8GAYQ1jDRUQkSpHzJUqXwAkYFOxuWAOGLhIR4aPd/Y/yL12Q/9m7LsKpHKlfKdNE/362Hc9wPI1Yh6opDfxVJg==
+
 "@types/body-parser@*":
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.19.0.tgz#0685b3c47eb3006ffed117cdd55164b61f80538f"
@@ -460,6 +465,11 @@ async@^2.6.3:
   integrity sha512-zflvls11DCy+dQWzTW2dzuilv8Z5X/pjfmZOWba6TNIVDm+2UDaJmXSOXlasHKfNBs8oo3M0aT50fDEWfKZjXg==
   dependencies:
     lodash "^4.17.14"
+
+atob@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
+  integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
 axios-retry@^3.1.2:
   version "3.1.8"
@@ -2634,7 +2644,7 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
-"stats-lite@github:vtex/node-stats-lite#dist":
+stats-lite@vtex/node-stats-lite#dist:
   version "2.2.0"
   resolved "https://codeload.github.com/vtex/node-stats-lite/tar.gz/1b0d39cc41ef7aaecfd541191f877887a2044797"
   dependencies:
@@ -2972,9 +2982,9 @@ vary@^1.1.2:
   version "1.60.2"
   resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.messages@1.60.2/public/@types/vtex.messages#e9b6005f11925e99ac3bb56d47d3ea6ad6d18280"
 
-"vtex.recommendation-graphql@https://rec--storecomponents.myvtex.com/_v/private/typings/linked/v1/vtex.recommendation-graphql@0.2.2-beta.0+build1599745895/public":
+"vtex.recommendation-graphql@https://rec--storecomponents.myvtex.com/_v/private/typings/linked/v1/vtex.recommendation-graphql@0.2.2-beta.0+build1600691320/public":
   version "0.0.0"
-  resolved "https://rec--storecomponents.myvtex.com/_v/private/typings/linked/v1/vtex.recommendation-graphql@0.2.2-beta.0+build1599745895/public#e5e4a3a00e381770e4d01eada21e9cc3e92914c6"
+  resolved "https://rec--storecomponents.myvtex.com/_v/private/typings/linked/v1/vtex.recommendation-graphql@0.2.2-beta.0+build1600691320/public#889759607b0a490fbfe6d669c40c5721fe3f4dc1"
 
 which-pm-runs@^1.0.0:
   version "1.0.0"
