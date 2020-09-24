@@ -1,3 +1,4 @@
+import { resolveSpecificationGroups } from './../utils';
 import { resolveSKU } from '../utils'
 
 export const queries = {
@@ -48,5 +49,5 @@ export const fieldResolvers = {
   productReference: (product: Product) => product.reference || product.id,
   properties: (product: Product) => product.productSpecifications,
   specificationGroups: (product: Product) =>
-    product.specificationGroups ? JSON.parse(product.specificationGroups) : {},
+    resolveSpecificationGroups(product),
 }

@@ -119,3 +119,62 @@ export const resolveSKU = (
   }
   return item
 }
+
+const getSKUSpecifications = (product: Product): string[] => {
+  const skuSpecs = product.skus
+    .map(sku => sku.attributes.map(attribute => attribute.key))
+    .reduce((acc, val) => acc.concat(val), [])
+  const uniqueSpecifications = new Set(skuSpecs)
+  return [...uniqueSpecifications]
+}
+
+export const resolveSpecificationGroups = (product: Product) => {
+  const specifications = product.specificationGroups
+    ? JSON.parse(product.specificationGroups)
+    : {}
+  const allSpecifications = (product.productSpecifications ?? []).concat(
+    getSKUSpecifications(product)
+  )
+
+  const specificationGroups: Record<string, string[]> = {
+    allSpecifications,
+  }
+
+  let allSpecificationsGroups = Object.keys(specifications)
+
+  if (product.textAttributes) {
+    allSpecifications.forEach(specification => {
+      const attributes =
+        product.textAttributes?.filter(
+          attribute => attribute.labelKey === specification
+        ) ?? []
+      specificationGroups[specification] = attributes.map(
+        attribute => attribute.labelValue
+      )
+    })
+  }
+
+  allSpecificationsGroups.forEach(
+    specification =>
+      (specificationGroups[specification] = specifications[specification])
+  )
+
+  allSpecificationsGroups = allSpecificationsGroups.concat([
+    'allSpecifications',
+  ])
+
+  return allSpecificationsGroups.map((groupName: string) => ({
+    originalName: groupName,
+    name: groupName,
+    specifications: (specificationGroups[groupName] ?? []).map(
+      (name: string) => {
+        const values = specificationGroups[name] ?? []
+        return {
+          originalName: name,
+          name,
+          values,
+        }
+      }
+    ),
+  }))
+}

@@ -125,6 +125,13 @@ declare global {
     order: number
   }
 
+  interface TextAttribute {
+    labelKey: string
+    labelValue: string
+    key: string
+    value: string
+  }
+
   interface Product {
     name: string
     id: string
@@ -151,6 +158,7 @@ declare global {
     categoryIds: string[]
     boost: Boost
     specificationGroups: string
+    textAttributes?: TextAttribute[]
   }
 
   interface Recommendation {
