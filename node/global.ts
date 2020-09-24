@@ -1,94 +1,175 @@
-import { ServiceContext } from '@vtex/api'
+import {
+  IOContext,
+  ParamsContext,
+  RecorderState,
+  ServiceContext,
+  SegmentData,
+} from '@vtex/api'
 
 import { Clients } from './clients/index'
 
 declare global {
-  type Context = ServiceContext<Clients>
+  type Context = ServiceContext<Clients, RecorderState, CustomContext>
 
-  interface PaidNavigationFilter {
-    filterBingAds: boolean
-    filterGoogleAds: boolean
-    categories: string[]
+  interface CustomContext extends ParamsContext {
+    vtex: CustomIOContext
+  }
+  interface CustomIOContext extends IOContext {
+    segment?: SegmentData
   }
 
-  interface UserNavigationInfo {
-    google: boolean
-    bing: boolean
+  interface SortOption {
+    field: string
+    desc: boolean
   }
 
-  interface StoreFrontSettings {
-    minProducts?: number
-    maxProducts?: number
-    paidNavigationFilter?: PaidNavigationFilter
+  interface Filter {
+    field: string
+    condition: string
+    value: string
   }
 
-  interface RecommendationInput {
-    store: string
-    strategy: string
-    secondaryStrategy?: string
-    user?: string
-    anonymousUser?: string
-    products?: string[]
-    categories?: string[]
-    userNavigationInfo?: UserNavigationInfo
-    settings?: StoreFrontSettings
+  enum RequestInputType {
+    USER = 'USER',
+    CATEGORY = 'CATEGORY',
+    PRODUCT = 'PRODUCT',
+    TAG_GROUP = 'TAG_GROUP',
+    CAMPAIGN = 'CAMPAIGN',
+    GROUP = 'GROUP',
+    ANONYMOUS_USER = 'ANONYMOUS_USER',
+    BRAND = 'BRAND',
+    STORE = 'STORE',
   }
 
-  interface Category {
+  enum StrategyType {
+    BEST_SELLERS = 'BEST_SELLERS',
+    MOST_POPULAR = 'MOST_POPULAR',
+    PRICE_REDUCTION = 'PRICE_REDUCTION',
+    NEW_RELEASES = 'NEW_RELEASES',
+    NAVIGATION_HISTORY = 'NAVIGATION_HISTORY',
+    RECOMMENDATION_HISTORY = 'RECOMMENDATION_HISTORY',
+    SIMILAR_PRODUCTS = 'SIMILAR_PRODUCTS',
+    BEST_CHOICE = 'BEST_CHOICE',
+    BOUGHT_TOGETHER = 'BOUGHT_TOGETHER',
+    CART_HISTORY = 'CART_HISTORY',
+    ORDER_HISTORY = 'ORDER_HISTORY',
+  }
+
+  interface RequestInput {
+    sessionId: string
+    strategy: StrategyType
+    input: {
+      type: {
+        primary: RequestInputType
+      }
+      values: string[]
+    }
+    recommendation: {
+      count: {
+        minimum: number
+        recommendations: number
+      }
+    }
+    sort: SortOption[]
+    filter: Filter[]
+  }
+
+  interface Seller {
     name: string
-    parent: string
-    originalId: string
-    ancestors: string[]
-  }
-
-  type KeyValueDict = { [key: string]: string }
-  type KeyValueArray = Array<{ key: string; value: string }>
-  type KeyValuePair = KeyValueArray | KeyValueDict
-
-  interface ProductSpec {
+    tax: number
     id: string
-    label: string
-    type: string
-    offerId: string
-    subSpecs: ProductSpec[]
-    images: KeyValuePair
   }
 
-  interface ProductRecommendationOffer {
-    offerId: string
-    originalProductId: string
-    sku: string
-    distributionCenter: string
+  interface Policy {
+    id: string
+    sellers: Seller[]
+  }
+
+  interface Attribute {
+    key: string
+    value: string
+  }
+
+  interface SKU {
+    reference: string
+    policies: Policy[]
+    attributes: Attribute[]
+    id: string
+    sellers: Seller[]
+  }
+
+  interface ExtraData {
+    value: string
+    key: string
+  }
+
+  interface Image {
     name: string
-    description: string
+    value: string
+  }
+
+  interface Installment {
+    interest: boolean
+    count: number
+    value: number
+  }
+
+  interface Boost {
+    newness: number
+    image: number
+    revenue: number
+    discount: number
+    click: number
+    availableSpecsCount: number
+    promotion: number
+    order: number
+  }
+
+  interface Product {
+    name: string
+    id: string
+    product: string
     url: string
-    imageUrl: string
-    secondaryImageUrl: string
-    price: string
-    oldPrice: string
-    currencySymbol: string
-    hasDiscount: boolean
-    discountPercentage: number
+    link: string
+    description: string
+    reference: string
+    price: number
+    oldPrice: number
+    skus: SKU[]
+    year: number
     brand: string
-    score: number
-    specs: ProductSpec[]
-    categories: Category[]
-    extraInfo: KeyValuePair
-    installment: KeyValuePair
-    imageUrlMap: KeyValuePair
+    brandId: string
+    extraData: ExtraData[]
+    installment: Installment
+    measurementUnit: string
+    unitMultiplier: number
+    tax: number
+    categories: string[]
+    stock: number
+    images: Image[]
+    productSpecifications: string[]
+    categoryIds: string[]
+    boost: Boost
+    specificationGroups: string
   }
 
-  interface ProductRecommendation {
-    productId: string
-    score: number
-    offers: ProductRecommendationOffer[]
-    specs: ProductSpec[]
+  interface Recommendation {
+    base: Product[]
+    recommended: Product[]
   }
 
-  interface APIBasedRecommendation {
-    baseIds: string[]
-    baseItems: ProductRecommendation[]
-    recommendationIds: string[]
-    recommendationItems: ProductRecommendation[]
+  interface RecommendationResponse {
+    variantId: string
+    response: {
+      recommendations: Recommendation[]
+    }
+  }
+
+  interface VTEXImage {
+    imageId: string
+    imageLabel: string
+    imageTag: string
+    imageUrl: string
+    imageText: string
   }
 }
