@@ -2982,9 +2982,9 @@ vary@^1.1.2:
   version "1.60.2"
   resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.messages@1.60.2/public/@types/vtex.messages#e9b6005f11925e99ac3bb56d47d3ea6ad6d18280"
 
-"vtex.recommendation-graphql@https://rec--storecomponents.myvtex.com/_v/private/typings/linked/v1/vtex.recommendation-graphql@0.2.2-beta.0+build1600691320/public":
+"vtex.recommendation-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.3.0/public":
   version "0.0.0"
-  resolved "https://rec--storecomponents.myvtex.com/_v/private/typings/linked/v1/vtex.recommendation-graphql@0.2.2-beta.0+build1600691320/public#889759607b0a490fbfe6d669c40c5721fe3f4dc1"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.3.0/public#589e848feb9d78c32efe9386c61502ebcf3c3389"
 
 which-pm-runs@^1.0.0:
   version "1.0.0"
