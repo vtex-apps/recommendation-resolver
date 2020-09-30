@@ -2923,10 +2923,10 @@ type-is@^1.6.16:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
-typescript@3.8.3:
-  version "3.8.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.8.3.tgz#409eb8544ea0335711205869ec458ab109ee1061"
-  integrity sha512-MYlEfn5VrLNsgudQTVJeNaQFUAI7DkhnOjdpAp4T+ku1TfQClewlbSuTVHiA+8skNBgaf02TL/kLOvig4y3G8w==
+typescript@3.9.7:
+  version "3.9.7"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.7.tgz#98d600a5ebdc38f40cb277522f12dc800e9e25fa"
+  integrity sha512-BLbiRkiBzAwsjut4x/dsibSTB6yWpwT5qWmC2OfuCg3GgVQCSgMs4vEctYPhsaGtd0AeuuHMkjZ2h2WG8MSzRw==
 
 universalify@^0.1.0:
   version "0.1.2"
@@ -2982,9 +2982,9 @@ vary@^1.1.2:
   version "1.60.2"
   resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.messages@1.60.2/public/@types/vtex.messages#e9b6005f11925e99ac3bb56d47d3ea6ad6d18280"
 
-"vtex.recommendation-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.3.0/public":
+"vtex.recommendation-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.3.1/public":
   version "0.0.0"
-  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.3.0/public#589e848feb9d78c32efe9386c61502ebcf3c3389"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.3.1/public#ecbc0387d99f4f611cf3099c1f8350b5d03a3aa5"
 
 which-pm-runs@^1.0.0:
   version "1.0.0"

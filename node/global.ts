@@ -69,9 +69,9 @@ declare global {
         minimum: number
         recommendations: number
       }
+      filter: Filter[]
+      sort: SortOption[]
     }
-    sort: SortOption[]
-    filter: Filter[]
   }
 
   interface Seller {
