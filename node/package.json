@@ -20,5 +20,5 @@
     "vtex.messages": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.messages@1.60.2/public/@types/vtex.messages",
     "vtex.recommendation-graphql": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.3.1/public"
   },
-  "version": "0.2.1"
+  "version": "0.2.2"
 }

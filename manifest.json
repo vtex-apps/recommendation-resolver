@@ -1,7 +1,7 @@
 {
   "vendor": "vtex",
   "name": "recommendation-resolver",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "title": "Recommendation Resolver",
   "description": "Implementation of the GraphQL schema for Recommendation API.",
   "builders": {
