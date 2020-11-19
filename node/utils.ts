@@ -24,7 +24,7 @@ const buildCommertialOffer = (
     Installments: installments,
     Price: price,
     ListPrice: oldPrice,
-    PriceWithoutDiscount: price,
+    PriceWithoutDiscount: oldPrice,
     Tax: tax ?? 0,
     taxPercentage: (tax ?? 0) / price,
   }
