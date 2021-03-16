@@ -1,5 +1,10 @@
-import { resolveSpecificationGroups } from './../utils';
-import { resolveSKU } from '../utils'
+import {
+  resolveSkuSpecifications,
+  resolveSpecificationFields,
+  resolveSKU,
+  objToNameValue,
+} from '../utils'
+import { getBenefits } from './benefits'
 
 export const queries = {
   recommendation: async (
@@ -17,13 +22,15 @@ export const queries = {
 }
 
 export const fieldResolvers = {
-  brand: (product: Product) => product.brand,
-  brandId: (product: Product) =>
-    product.brandId ? Number(product.brandId) : -1,
-  cacheId: (product: Product) => `sp-${product.id}`,
-  categories: (product: Product) => product.categories,
-  categoriesIds: (product: Product) => product.categoryIds,
-  description: (product: Product) => product.description,
+  brand: ({ brand }: Product) => brand,
+  brandId: ({ brandId }: Product) => (brandId ? Number(brandId) : -1),
+  benefits: ({ id }: Product, _: unknown, ctx: Context) => getBenefits(id, ctx),
+  cacheId: ({ id }: Product) => `sp-${id}`,
+  categories: ({ categories }: Product) => categories,
+  categoriesIds: ({ categoryIds }: Product) => categoryIds,
+  clusterHighlights: ({ clusterHighlights = {} }: Product) =>
+    objToNameValue('id', 'name', clusterHighlights),
+  description: ({ description }: Product) => description,
   items: async (product: Product, _: unknown, ctx: Context) => {
     const {
       vtex: { segment },
@@ -34,8 +41,9 @@ export const fieldResolvers = {
       resolveSKU(product, sku, tradePolicy)
     )
   },
-  link: (product: Product) => product.link,
-  linkText: (product: Product) => product.link,
+  link: ({ url }: Product) => url,
+  linkText: ({ link }: Product) => link,
+  metaTagDescription: () => '',
   priceRange: (product: Product) => {
     const listPrice = {
       highPrice: product.oldPrice,
@@ -44,10 +52,32 @@ export const fieldResolvers = {
     const sellingPrice = { highPrice: product.price, lowPrice: product.price }
     return { listPrice, sellingPrice }
   },
-  productId: (product: Product) => product.id,
-  productName: (product: Product) => product.name,
-  productReference: (product: Product) => product.reference || product.id,
-  properties: (product: Product) => product.productSpecifications,
-  specificationGroups: (product: Product) =>
-    resolveSpecificationGroups(product),
+  productClusters: ({ textAttributes }: Product) => {
+    const productClusters: Array<Record<string, string>> = []
+    textAttributes
+      ?.filter(attribute => attribute.labelKey === 'productClusterNames')
+      .forEach(attribute => {
+        if (attribute.valueId) {
+          productClusters.push({
+            id: attribute.valueId,
+            name: attribute.labelValue,
+          })
+        }
+      })
+    return productClusters
+  },
+  productId: ({ id }: Product) => id,
+  productName: ({ name }: Product) => name,
+  productReference: (product: Product) =>
+    product.reference ?? product.product ?? product.id,
+  properties: (product: Product) => {
+    const { properties } = resolveSpecificationFields(product)
+    return properties
+  },
+  skuSpecifications: (product: Product) => resolveSkuSpecifications(product),
+  specificationGroups: (product: Product) => {
+    const { specificationGroups } = resolveSpecificationFields(product)
+    return specificationGroups
+  },
+  titleTag: ({ name }: Product) => name ?? '',
 }

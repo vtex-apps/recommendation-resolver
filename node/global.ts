@@ -78,6 +78,32 @@ declare global {
     name: string
     tax: number
     id: string
+    installment?: Installment
+    teasers: Teaser[]
+    price?: number
+    oldPrice?: number
+    stock?: number
+    default?: boolean
+  }
+
+  interface Teaser {
+    name: string
+    conditions: TeaserCondition
+    effects: TeaserEffects
+  }
+
+  interface TeaserCondition {
+    minimumQuantity: number
+    parameters: [TeaserValue]
+  }
+
+  interface TeaserEffects {
+    parameters: [TeaserValue]
+  }
+
+  interface TeaserValue {
+    name: string
+    value: string
   }
 
   interface Policy {
@@ -96,6 +122,11 @@ declare global {
     attributes: Attribute[]
     id: string
     sellers: Seller[]
+    ean: string
+    images: Image[]
+    videos: any[]
+    name?: string
+    nameComplete?: string
   }
 
   interface ExtraData {
@@ -130,16 +161,20 @@ declare global {
     labelValue: string
     key: string
     value: string
+    valueId?: string
+    isSku: boolean
+    joinedKey?: string
+    joinedValue?: string
   }
 
   interface Product {
     name: string
     id: string
-    product: string
+    product?: string
     url: string
     link: string
     description: string
-    reference: string
+    reference?: string
     price: number
     oldPrice: number
     skus: SKU[]
@@ -159,6 +194,8 @@ declare global {
     boost: Boost
     specificationGroups: string
     textAttributes?: TextAttribute[]
+    numberAttributes?: TextAttribute[]
+    clusterHighlights: Record<string, string>
   }
 
   interface Recommendation {

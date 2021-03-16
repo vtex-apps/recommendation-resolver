@@ -1,10 +1,37 @@
-const buildCommertialOffer = (
-  price: number,
-  oldPrice: number,
-  installment?: Installment,
+interface CommertialOfferProps {
+  price: number
+  oldPrice: number
+  stock: number
+  teasers: Teaser[]
+  installment?: Installment
   tax?: number
-  // eslint-disable-next-line max-params
-) => {
+}
+
+interface Property {
+  name: string
+  originalName: string
+  values: string[]
+}
+
+interface SpecificationGroup {
+  name: string
+  originalName: string
+  specifications: Property[]
+}
+
+interface SpecificationFields {
+  properties: Property[]
+  specificationGroups: SpecificationGroup[]
+}
+
+const buildCommertialOffer = ({
+  price,
+  oldPrice,
+  stock,
+  teasers,
+  installment,
+  tax,
+}: CommertialOfferProps) => {
   const installments = installment
     ? [
         {
@@ -12,21 +39,31 @@ const buildCommertialOffer = (
           InterestRate: 0,
           TotalValuePlusInterestRate: price,
           NumberOfInstallments: installment.count,
-          Name: '',
+          Name: '', // não tem na API
+          PaymentSystemName: '', // não tem na API
+          PaymentSystemGroupName: '', // não tem na API
         },
       ]
     : []
 
+  const availableQuantity = stock && stock > 0 ? 10000 : 0
+  const spotPrice =
+    installments.find(({ NumberOfInstallments, Value }) => {
+      return NumberOfInstallments === 1 && Value < price
+    })?.Value ?? price
+
   return {
-    AvailableQuantity: 10000,
-    discountHighlights: [],
-    teasers: [],
+    AvailableQuantity: availableQuantity,
+    discountHighlights: [], // não tem na API
     Installments: installments,
     Price: price,
     ListPrice: oldPrice,
     PriceWithoutDiscount: oldPrice,
     Tax: tax ?? 0,
     taxPercentage: (tax ?? 0) / price,
+    teasers,
+    spotPrice,
+    giftSkuIds: [], // não tem na API
   }
 }
 
@@ -37,7 +74,7 @@ const buildImages = (productImages: Image[]) => {
 
   productImages.forEach(image => {
     const imageId = baseUrlImageRegex.test(image.value)
-      ? baseUrlImageRegex.exec(image.value)![1]
+      ? baseUrlImageRegex.exec(image.value)?.[1]
       : undefined
 
     imageId
@@ -77,47 +114,28 @@ const getSellers = (product: Product, sku: SKU, tradePolicy?: string) => {
 
   const sellers = selectedPolicy?.sellers ?? []
 
-  return sellers.map((seller: any) => {
-    const price = seller.price ?? product.price
+  return sellers.map((seller: Seller) => {
+    const price = seller.price ?? product.price // n tem sku.price, sku.oldPrice e sku.stock na API
     const oldPrice = seller.oldPrice ?? product.oldPrice
     const installment = seller.installment ?? product.installment
+    const stock = seller.stock ?? product.stock
+    const teasers = seller.teasers ?? []
 
     return {
       sellerId: seller.id,
-      sellerName: '',
-      commertialOffer: buildCommertialOffer(
+      sellerName: seller.name,
+      addToCartLink: '',
+      sellerDefault: seller.default ?? false,
+      commertialOffer: buildCommertialOffer({
         price,
         oldPrice,
+        stock,
+        teasers,
         installment,
-        product.tax
-      ),
-      addToCartLink: '',
-      sellerDefault: false,
+        tax: product.tax,
+      }),
     }
   })
-}
-
-export const resolveSKU = (
-  product: Product,
-  sku: SKU,
-  tradePolicy?: string
-) => {
-  const sellers = getSellers(product, sku, tradePolicy)
-
-  const item = {
-    name: product.name,
-    nameComplete: product.name,
-    complementName: product.name,
-    ean: '',
-    images: buildImages(product.images),
-    itemId: sku.id,
-    measurementUnit: product.measurementUnit,
-    referenceId: [{ Key: 'RefId', Value: sku.reference }],
-    sellers,
-    unitMultiplier: product.unitMultiplier,
-    variations: buildVariations(sku),
-  }
-  return item
 }
 
 const getSKUSpecifications = (product: Product): string[] => {
@@ -128,53 +146,174 @@ const getSKUSpecifications = (product: Product): string[] => {
   return [...uniqueSpecifications]
 }
 
-export const resolveSpecificationGroups = (product: Product) => {
-  const specifications = product.specificationGroups
-    ? JSON.parse(product.specificationGroups)
-    : {}
-  const allSpecifications = (product.productSpecifications ?? []).concat(
-    getSKUSpecifications(product)
-  )
+export const resolveSKU = (
+  product: Product,
+  sku: SKU,
+  tradePolicy?: string
+) => {
+  const sellers = getSellers(product, sku, tradePolicy)
 
-  const specificationGroups: Record<string, string[]> = {
-    allSpecifications,
+  const item = {
+    itemId: sku.id,
+    name: sku.name ?? product.name,
+    nameComplete: sku.nameComplete ?? product.name,
+    complementName: product.name,
+    ean: sku.ean,
+    measurementUnit: product.measurementUnit,
+    unitMultiplier: product.unitMultiplier,
+    referenceId: [{ Key: 'RefId', Value: sku.reference }],
+    images: buildImages(sku.images ?? product.images),
+    videos: sku.videos,
+    sellers,
+    variations: buildVariations(sku),
   }
+  return item
+}
 
-  let allSpecificationsGroups = Object.keys(specifications)
+export const resolveSpecificationFields = (() => {
+  let memo: [Product, SpecificationFields] | null = null
+  return (product: Product) => {
+    if (memo !== null && memo[0] === product) {
+      return memo[1]
+    }
 
-  if (product.textAttributes) {
-    allSpecifications.forEach(specification => {
-      const attributes =
-        product.textAttributes?.filter(
-          attribute => attribute.labelKey === specification
-        ) ?? []
-      specificationGroups[specification] = attributes.map(
-        attribute => attribute.labelValue
-      )
-    })
-  }
+    const specifications = product.specificationGroups
+      ? JSON.parse(product.specificationGroups)
+      : {}
 
-  allSpecificationsGroups.forEach(
-    specification =>
-      (specificationGroups[specification] = specifications[specification])
-  )
+    let allSpecificationsGroups = Object.keys(specifications)
 
-  allSpecificationsGroups = allSpecificationsGroups.concat([
-    'allSpecifications',
-  ])
+    const allSpecifications = (product.productSpecifications ?? []).concat(
+      getSKUSpecifications(product)
+    )
 
-  return allSpecificationsGroups.map((groupName: string) => ({
-    originalName: groupName,
-    name: groupName,
-    specifications: (specificationGroups[groupName] ?? []).map(
-      (name: string) => {
-        const values = specificationGroups[name] ?? []
-        return {
-          originalName: name,
-          name,
-          values,
-        }
+    const specificationGroups: Record<string, string[]> = {
+      allSpecifications,
+    }
+
+    if (product.textAttributes) {
+      allSpecifications.forEach(specification => {
+        const attributes =
+          product.textAttributes?.filter(
+            attribute => attribute.labelKey === specification
+          ) ?? []
+        specificationGroups[specification] = attributes.map(
+          attribute => attribute.labelValue
+        )
+      })
+    }
+
+    allSpecificationsGroups.forEach(
+      specification =>
+        (specificationGroups[specification] = specifications[specification])
+    )
+
+    allSpecificationsGroups = allSpecificationsGroups.concat([
+      'allSpecifications',
+    ])
+
+    const allSpecificationGroups = allSpecificationsGroups.map(
+      (groupName: string) => ({
+        originalName: groupName,
+        name: groupName,
+        specifications: (specificationGroups[groupName] ?? []).map(
+          (name: string) => {
+            const values = specificationGroups[name] ?? []
+            return {
+              originalName: name,
+              name,
+              values,
+            }
+          }
+        ),
+      })
+    )
+
+    const properties = allSpecifications.map((name: string) => {
+      const values = specificationGroups[name]
+      return {
+        name,
+        originalName: name,
+        values,
       }
-    ),
-  }))
+    })
+
+    memo = [
+      product,
+      {
+        specificationGroups: allSpecificationGroups,
+        properties,
+      },
+    ]
+
+    return memo[1]
+  }
+})()
+
+const getSpecificationsByAttributes = (attributes: TextAttribute[]) => {
+  const specificationsByKey = attributes.reduce(
+    (specsByKey: { [key: string]: TextAttribute[] }, spec) => {
+      // the joinedKey has the format text@@@key@@@labelKey@@@originalKey@@@originalLabelKey
+      const value = spec.joinedKey?.split('@@@')[3] ?? spec.labelKey
+      specsByKey[value] = (specsByKey[value] || []).concat(spec)
+
+      return specsByKey
+    },
+    {}
+  )
+
+  const specKeys = Object.keys(specificationsByKey)
+
+  const specifications = specKeys.map(key => {
+    const originalFieldName =
+      specificationsByKey[key][0].joinedKey?.split('@@@')[4] ??
+      specificationsByKey[key][0].labelKey
+
+    return {
+      field: {
+        name: specificationsByKey[key][0].labelKey,
+        originalName: originalFieldName,
+      },
+      values: specificationsByKey[key].map(specification => {
+        return {
+          name: specification.labelValue ?? specification.value,
+          originalName:
+            specification.joinedValue?.split('@@@')[1] ?? specification.value,
+        }
+      }),
+    }
+  })
+
+  return specifications
+}
+
+export const resolveSkuSpecifications = (product: Product) => {
+  const specificationAttributes = product.textAttributes?.filter(
+    attribute => attribute.isSku
+  )
+  const textSpecifications = getSpecificationsByAttributes(
+    specificationAttributes ?? []
+  )
+
+  const numberAttributes = (product.numberAttributes ?? []).filter(
+    attribute => attribute.key !== 'price'
+  )
+  const numberSpecifications = getSpecificationsByAttributes(numberAttributes)
+
+  return textSpecifications.concat(numberSpecifications)
+}
+
+export const objToNameValue = (
+  keyName: string,
+  valueName: string,
+  record: Record<string, string> | null | undefined
+) => {
+  if (!record) {
+    return []
+  }
+  return Object.keys(record).reduce((acc, key) => {
+    const value = record[key]
+    acc.push({ [keyName]: key, [valueName]: value })
+    return acc
+  }, [] as Array<Record<string, string>>)
 }
