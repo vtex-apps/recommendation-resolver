@@ -3,7 +3,7 @@
   "private": true,
   "license": "UNLICENSED",
   "dependencies": {
-    "vtex.recommendation-graphql": "http://recommendation--exitocol.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.3.2+build1615904874/public"
+    "vtex.recommendation-graphql": "http://recommendation--exitocol.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.3.2+build1615923035/public"
   },
   "devDependencies": {
     "@types/atob": "^2.1.2",

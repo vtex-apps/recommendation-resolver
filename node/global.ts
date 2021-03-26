@@ -143,6 +143,8 @@ declare global {
     interest: boolean
     count: number
     value: number
+    paymentName?: string
+    paymentGroupName?: string
   }
 
   interface Boost {

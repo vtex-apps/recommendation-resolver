@@ -39,9 +39,9 @@ const buildCommertialOffer = ({
           InterestRate: 0,
           TotalValuePlusInterestRate: price,
           NumberOfInstallments: installment.count,
-          Name: '', // não tem na API
-          PaymentSystemName: '', // não tem na API
-          PaymentSystemGroupName: '', // não tem na API
+          Name: '',
+          PaymentSystemName: installment.paymentName ?? '',
+          PaymentSystemGroupName: installment.paymentGroupName ?? '',
         },
       ]
     : []
@@ -54,7 +54,7 @@ const buildCommertialOffer = ({
 
   return {
     AvailableQuantity: availableQuantity,
-    discountHighlights: [], // não tem na API
+    discountHighlights: [],
     Installments: installments,
     Price: price,
     ListPrice: oldPrice,
@@ -63,7 +63,7 @@ const buildCommertialOffer = ({
     taxPercentage: (tax ?? 0) / price,
     teasers,
     spotPrice,
-    giftSkuIds: [], // não tem na API
+    giftSkuIds: [],
   }
 }
 
@@ -115,7 +115,7 @@ const getSellers = (product: Product, sku: SKU, tradePolicy?: string) => {
   const sellers = selectedPolicy?.sellers ?? []
 
   return sellers.map((seller: Seller) => {
-    const price = seller.price ?? product.price // n tem sku.price, sku.oldPrice e sku.stock na API
+    const price = seller.price ?? product.price
     const oldPrice = seller.oldPrice ?? product.oldPrice
     const installment = seller.installment ?? product.installment
     const stock = seller.stock ?? product.stock
@@ -132,7 +132,7 @@ const getSellers = (product: Product, sku: SKU, tradePolicy?: string) => {
         stock,
         teasers,
         installment,
-        tax: product.tax,
+        tax: seller.tax ?? product.tax,
       }),
     }
   })
