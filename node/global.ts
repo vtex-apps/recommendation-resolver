@@ -127,6 +127,8 @@ declare global {
     videos: any[]
     name?: string
     nameComplete?: string
+    price?: number
+    oldPrice?: number
   }
 
   interface ExtraData {

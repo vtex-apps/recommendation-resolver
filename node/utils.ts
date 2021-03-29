@@ -115,8 +115,8 @@ const getSellers = (product: Product, sku: SKU, tradePolicy?: string) => {
   const sellers = selectedPolicy?.sellers ?? []
 
   return sellers.map((seller: Seller) => {
-    const price = seller.price ?? product.price
-    const oldPrice = seller.oldPrice ?? product.oldPrice
+    const price = seller.price ?? sku.price ?? product.price
+    const oldPrice = seller.oldPrice ?? sku.oldPrice ?? product.oldPrice
     const installment = seller.installment ?? product.installment
     const stock = seller.stock ?? product.stock
     const teasers = seller.teasers ?? []
