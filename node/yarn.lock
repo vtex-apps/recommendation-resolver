@@ -215,10 +215,10 @@
     semver "^7.3.2"
     tsutils "^3.17.1"
 
-"@vtex/api@6.36.3":
-  version "6.36.3"
-  resolved "https://registry.yarnpkg.com/@vtex/api/-/api-6.36.3.tgz#d827944829fb289d3a826cac12874f8e33ce62f5"
-  integrity sha512-i7zZ0Mj5pGEr6wd8VCK/hhiKTmmiuTn44v9MlWn36MRvtfBfOsKlhMFUEv3HBT1MH+fQTNM9vY08uSy7BsG44w==
+"@vtex/api@6.41.0":
+  version "6.41.0"
+  resolved "https://registry.yarnpkg.com/@vtex/api/-/api-6.41.0.tgz#cee074ff49de8a5de92f3d353a4689275cb92f7b"
+  integrity sha512-RvfdpczsxCFacZkDSl2v2NmfD/bHFxHHn2xQsEwSQ+40snGxfOz56TlCbPbgMEtkC8Bf+1GGUkCIChRE6xnlLg==
   dependencies:
     "@types/koa" "^2.11.0"
     "@types/koa-compose" "^3.2.3"
@@ -2982,9 +2982,9 @@ vary@^1.1.2:
   version "1.60.2"
   resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.messages@1.60.2/public/@types/vtex.messages#e9b6005f11925e99ac3bb56d47d3ea6ad6d18280"
 
-"vtex.recommendation-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.3.1/public":
+"vtex.recommendation-graphql@http://recommendation--exitocol.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.3.2+build1615923035/public":
   version "0.0.0"
-  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.3.1/public#ecbc0387d99f4f611cf3099c1f8350b5d03a3aa5"
+  resolved "http://recommendation--exitocol.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.3.2+build1615923035/public#a5f3977594d2162c8793d1f42b976d17764f8981"
 
 which-pm-runs@^1.0.0:
   version "1.0.0"

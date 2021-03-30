@@ -5,6 +5,7 @@ import { Clients, clients } from './clients'
 import {
   queries as recommendationsQueries,
   fieldResolvers as ProductResolvers,
+  SkuResolver,
 } from './resolvers/recommendations'
 
 export default new Service<Clients, RecorderState, ParamsContext>({
@@ -15,6 +16,7 @@ export default new Service<Clients, RecorderState, ParamsContext>({
       Query: {
         ...recommendationsQueries,
       },
+      SKU: SkuResolver
     },
     schema,
   },

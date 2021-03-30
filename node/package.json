@@ -3,12 +3,12 @@
   "private": true,
   "license": "UNLICENSED",
   "dependencies": {
-    "vtex.recommendation-graphql": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.3.1/public"
+    "vtex.recommendation-graphql": "http://recommendation--exitocol.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.3.2+build1615923035/public"
   },
   "devDependencies": {
     "@types/atob": "^2.1.2",
     "@types/node": "^12.12.21",
-    "@vtex/api": "6.36.3",
+    "@vtex/api": "6.41.0",
     "@vtex/prettier-config": "^0.1.3",
     "atob": "^2.1.2",
     "eslint": "^6.8.0",
