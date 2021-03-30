@@ -17,3 +17,21 @@ export const getBenefits = async (
   const benefitsData = await checkout.simulation(requestBody)
   return benefitsData?.ratesAndBenefitsData?.teaser || []
 }
+
+export const getRateAndBenefitsIdentifiers = async (
+  itemId: string,
+  { clients: { checkout } }: Context,
+  sellerId?: string,
+) => {
+  const requestBody = {
+    items: [
+      {
+        id: itemId,
+        quantity: DEFAULT_QUANTITY,
+        seller: sellerId || DEFAULT_SELLER,
+      },
+    ],
+  }
+  const benefitsData = await checkout.simulation(requestBody)
+  return benefitsData?.ratesAndBenefitsData?.rateAndBenefitsIdentifiers || []
+}

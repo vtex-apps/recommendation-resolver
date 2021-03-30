@@ -4,7 +4,7 @@ import {
   resolveSKU,
   objToNameValue,
 } from '../utils'
-import { getBenefits } from './benefits'
+import { getBenefits, getRateAndBenefitsIdentifiers } from './benefits'
 
 export const queries = {
   recommendation: async (
@@ -80,4 +80,15 @@ export const fieldResolvers = {
     return specificationGroups
   },
   titleTag: ({ name }: Product) => name ?? '',
+}
+
+export const SkuResolver =  {
+  sellers: async (sku: any, _: unknown, ctx: Context) => {
+    for (const seller of sku.sellers) {
+     const rateAndBenefitsIdentifiers = await getRateAndBenefitsIdentifiers(sku.itemId, ctx, seller.sellerId)
+     seller.commertialOffer.discountHighlights = rateAndBenefitsIdentifiers.filter(rateAndBenefitsIdentifier => rateAndBenefitsIdentifier.featured)
+    }
+  
+    return sku.sellers;
+  }
 }
