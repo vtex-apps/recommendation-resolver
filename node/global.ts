@@ -127,6 +127,8 @@ declare global {
     videos: any[]
     name?: string
     nameComplete?: string
+    complementName: string
+
     price?: number
     oldPrice?: number
   }
@@ -220,5 +222,13 @@ declare global {
     imageTag: string
     imageUrl: string
     imageText: string
+  }
+
+  interface Region {
+    id: string
+    sellers: Array<{
+      id: string
+      name: string
+    }>
   }
 }

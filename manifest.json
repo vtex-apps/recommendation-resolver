@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "vtex.messages": "1.x",
-    "vtex.recommendation-graphql": "0.x"
+    "vtex.recommendation-graphql": "0.x",
+    "vtex.store-graphql": "2.x"
   },
   "policies": [
     {
@@ -26,6 +27,9 @@
         "host": "api.biggylabs.com.br",
         "path": "/*"
       }
+    },
+    {
+      "name": "vtex.store-graphql:resolve-graphql"
     }
   ],
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
