@@ -2,6 +2,13 @@ import { AppGraphQLClient, IOContext, InstanceOptions } from '@vtex/api'
 
 import { itemsWithSimulation } from './queries'
 
+interface ItemsWithSimulationPayload {
+  items: Array<{
+    itemId: string
+    sellers: Array<{ sellerId: string }>
+  }>
+}
+
 export class Store extends AppGraphQLClient {
   constructor(context: IOContext, options?: InstanceOptions) {
     super('vtex.store-graphql@2.x', context, {
@@ -12,14 +19,17 @@ export class Store extends AppGraphQLClient {
     })
   }
 
-  public itemsWithSimulation = (variables: any) => {
-    return this.graphql.query<any, any>(
+  public itemsWithSimulation = (variables: ItemsWithSimulationPayload) => {
+    return this.graphql.query<
+      { itemsWithSimulation: SearchItem[] },
+      ItemsWithSimulationPayload
+    >(
       {
         query: itemsWithSimulation,
         variables,
       },
       {
-        metric: 'intelligent-search-items-with-simulation',
+        metric: 'recommendation-items-with-simulation',
       }
     )
   }

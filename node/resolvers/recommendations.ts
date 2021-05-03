@@ -25,17 +25,24 @@ export const queries = {
   },
 }
 
-const fillProductWithSimulation = async (product: any, store: Store) => {
+const fillProductWithSimulation = async (
+  product: SearchProduct,
+  store: Store
+) => {
   const payload = {
-    items: product.items.map((item: any) => ({
+    items: product.items.map(item => ({
       itemId: item.itemId,
-      sellers: item.sellers.map((seller: any) => ({
+      sellers: item.sellers.map(seller => ({
         sellerId: seller.sellerId,
       })),
     })),
   }
 
   const itemsWithSimulation = await store.itemsWithSimulation(payload)
+
+  if (!itemsWithSimulation.data) {
+    return product
+  }
 
   return mergeProductWithItems(
     product,
@@ -52,7 +59,7 @@ const convertProducts = (products: Product[], ctx: Context) => {
 
   return products
     .map(product => convertISProduct(product, tradePolicy))
-    .map(product => fillProductWithSimulation(product, store))
+    .map(product => fillProductWithSimulation(product as SearchProduct, store))
 }
 
 export const recommendationResolver = {

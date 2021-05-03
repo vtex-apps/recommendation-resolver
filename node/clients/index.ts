@@ -16,7 +16,7 @@ export class Clients extends IOClients {
   }
 
   public get store() {
-    return this.getOrSet('stoer', Store)
+    return this.getOrSet('store', Store)
   }
 }
 
