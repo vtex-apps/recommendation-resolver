@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- `buildFilter` function.
+- "Hot" price from simulation.
+
+### Changed
+
+- Use the `vtexis-compatibility-layer` to convert the product.
+
 ## [0.3.1] - 2021-04-12
 
 ## [0.3.0] - 2021-03-30
