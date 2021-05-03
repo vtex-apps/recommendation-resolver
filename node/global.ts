@@ -232,14 +232,6 @@ declare global {
     }>
   }
 
-  interface SearchImage {
-    imageId: string
-    imageLabel: string | null
-    imageTag: string
-    imageUrl: string
-    imageText: string
-  }
-
   interface SearchItem {
     itemId: string
     name: string
@@ -250,7 +242,7 @@ declare global {
     measurementUnit: string
     unitMultiplier: number
     modalType: any | null
-    images: SearchImage[]
+    images: VTEXImage[]
     Videos: string[]
     variations: string[]
     sellers: Seller[]
