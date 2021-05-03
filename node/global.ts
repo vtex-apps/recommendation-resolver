@@ -129,7 +129,6 @@ declare global {
     name?: string
     nameComplete?: string
     complementName: string
-
     price?: number
     oldPrice?: number
   }
