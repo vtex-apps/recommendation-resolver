@@ -6,7 +6,7 @@
     "atob": "^2.1.2",
     "graphql": "^14.5.8",
     "graphql-tools": "^4.0.6",
-    "vtex.recommendation-graphql": "http://hiago--carrefourbrfood.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.4.0+build1620043986/public",
+    "vtex.recommendation-graphql": "http://hiago--carrefourbrfood.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.5.0/public",
     "vtexis-compatibility-layer": "^1.1.2"
   },
   "devDependencies": {
@@ -21,7 +21,7 @@
     "prettier": "^1.19.1",
     "typescript": "3.9.7",
     "vtex.messages": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.messages@1.60.2/public/@types/vtex.messages",
-    "vtex.recommendation-graphql": "http://hiago--carrefourbrfood.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.4.0+build1619724129/public"
+    "vtex.recommendation-graphql": "http://hiago--carrefourbrfood.vtexassets.com/_v/public/typings/v1/vtex.recommendation-graphql@0.5.0/public"
   },
   "version": "0.3.1"
 }
