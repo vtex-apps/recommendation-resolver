@@ -37,6 +37,13 @@ class Checkout extends JanusClient {
       }
     )
 
+  public regions = (regionId: string, tradePolicy?: string) =>
+    this.http.get(
+      `/api/checkout/pub/regions/${regionId}${
+        tradePolicy ? `?sc=${tradePolicy}` : ''
+      }`
+    )
+
   protected post = <T>(url: string, data?: any, config: RequestConfig = {}) => {
     return this.http.post<T>(url, data, config).catch(statusToError) as Promise<
       T

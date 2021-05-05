@@ -1,10 +1,10 @@
 import {
-  resolveSkuSpecifications,
-  resolveSpecificationFields,
-  resolveSKU,
-  objToNameValue,
-} from '../utils'
-import { getBenefits, getRateAndBenefitsIdentifiers } from './benefits'
+  convertISProduct,
+  mergeProductWithItems,
+} from 'vtexis-compatibility-layer'
+
+import { Store } from '../clients/store'
+import { buildFilter } from '../utils'
 
 export const queries = {
   recommendation: async (
@@ -17,78 +17,57 @@ export const queries = {
       vtex: { account },
     } = ctx
 
+    const filter = await buildFilter(ctx)
+
+    input.recommendation.filter = filter
+
     return recommendations.get(input, account)
   },
 }
 
-export const fieldResolvers = {
-  brand: ({ brand }: Product) => brand,
-  brandId: ({ brandId }: Product) => (brandId ? Number(brandId) : -1),
-  benefits: ({ id }: Product, _: unknown, ctx: Context) => getBenefits(id, ctx),
-  cacheId: ({ id }: Product) => `sp-${id}`,
-  categories: ({ categories }: Product) => categories,
-  categoriesIds: ({ categoryIds }: Product) => categoryIds,
-  clusterHighlights: ({ clusterHighlights = {} }: Product) =>
-    objToNameValue('id', 'name', clusterHighlights),
-  description: ({ description }: Product) => description,
-  items: async (product: Product, _: unknown, ctx: Context) => {
-    const {
-      vtex: { segment },
-    } = ctx
-    const tradePolicy = segment?.channel?.toString()
+const fillProductWithSimulation = async (
+  product: SearchProduct,
+  store: Store
+) => {
+  const payload = {
+    items: product.items.map(item => ({
+      itemId: item.itemId,
+      sellers: item.sellers.map(seller => ({
+        sellerId: seller.sellerId,
+      })),
+    })),
+  }
 
-    return (product.skus || []).map(sku =>
-      resolveSKU(product, sku, tradePolicy)
-    )
-  },
-  link: ({ url }: Product) => url,
-  linkText: ({ link }: Product) => link,
-  metaTagDescription: () => '',
-  priceRange: (product: Product) => {
-    const listPrice = {
-      highPrice: product.oldPrice,
-      lowPrice: product.oldPrice,
-    }
-    const sellingPrice = { highPrice: product.price, lowPrice: product.price }
-    return { listPrice, sellingPrice }
-  },
-  productClusters: ({ textAttributes }: Product) => {
-    const productClusters: Array<Record<string, string>> = []
-    textAttributes
-      ?.filter(attribute => attribute.labelKey === 'productClusterNames')
-      .forEach(attribute => {
-        if (attribute.valueId) {
-          productClusters.push({
-            id: attribute.valueId,
-            name: attribute.labelValue,
-          })
-        }
-      })
-    return productClusters
-  },
-  productId: ({ id }: Product) => id,
-  productName: ({ name }: Product) => name,
-  productReference: (product: Product) =>
-    product.reference ?? product.product ?? product.id,
-  properties: (product: Product) => {
-    const { properties } = resolveSpecificationFields(product)
-    return properties
-  },
-  skuSpecifications: (product: Product) => resolveSkuSpecifications(product),
-  specificationGroups: (product: Product) => {
-    const { specificationGroups } = resolveSpecificationFields(product)
-    return specificationGroups
-  },
-  titleTag: ({ name }: Product) => name ?? '',
+  const itemsWithSimulation = await store.itemsWithSimulation(payload)
+
+  if (!itemsWithSimulation.data) {
+    return product
+  }
+
+  return mergeProductWithItems(
+    product,
+    itemsWithSimulation.data.itemsWithSimulation
+  )
 }
 
-export const SkuResolver =  {
-  sellers: async (sku: any, _: unknown, ctx: Context) => {
-    for (const seller of sku.sellers) {
-     const rateAndBenefitsIdentifiers = await getRateAndBenefitsIdentifiers(sku.itemId, ctx, seller.sellerId)
-     seller.commertialOffer.discountHighlights = rateAndBenefitsIdentifiers.filter(rateAndBenefitsIdentifier => rateAndBenefitsIdentifier.featured)
-    }
-  
-    return sku.sellers;
-  }
+const convertProducts = (products: Product[], ctx: Context) => {
+  const {
+    vtex: { segment },
+    clients: { store },
+  } = ctx
+  const tradePolicy = segment?.channel?.toString()
+
+  return products
+    .map(product => convertISProduct(product, tradePolicy))
+    .map(product => fillProductWithSimulation(product as SearchProduct, store))
+}
+
+export const recommendationResolver = {
+  recommended: async (
+    recommendation: Recommendation,
+    _: unknown,
+    ctx: Context
+  ) => convertProducts(recommendation.recommended, ctx),
+  base: async (recommendation: Recommendation, _: unknown, ctx: Context) =>
+    convertProducts(recommendation.base, ctx),
 }

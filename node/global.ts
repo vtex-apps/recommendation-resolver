@@ -78,6 +78,7 @@ declare global {
     name: string
     tax: number
     id: string
+    sellerId: string
     installment?: Installment
     teasers: Teaser[]
     price?: number
@@ -127,6 +128,7 @@ declare global {
     videos: any[]
     name?: string
     nameComplete?: string
+    complementName: string
     price?: number
     oldPrice?: number
   }
@@ -220,5 +222,142 @@ declare global {
     imageTag: string
     imageUrl: string
     imageText: string
+  }
+
+  interface Region {
+    id: string
+    sellers: Array<{
+      id: string
+      name: string
+    }>
+  }
+
+  interface SearchItem {
+    itemId: string
+    name: string
+    nameComplete: string
+    complementName: string
+    ean: string
+    referenceId: Array<{ Key: string; Value: string }>
+    measurementUnit: string
+    unitMultiplier: number
+    modalType: any | null
+    images: VTEXImage[]
+    Videos: string[]
+    variations: string[]
+    sellers: Seller[]
+    attachments: Array<{
+      id: number
+      name: string
+      required: boolean
+      domainValues: string
+    }>
+    isKit: boolean
+    kitItems?: Array<{
+      itemId: string
+      amount: number
+    }>
+  }
+
+  interface SearchProduct {
+    productId: string
+    productName: string
+    brand: string
+    brandId: number
+    linkText: string
+    productReference: string
+    categoryId: string
+    productTitle: string
+    metaTagDescription: string
+    clusterHighlights: Record<string, string>
+    productClusters: Record<string, string>
+    searchableClusters: Record<string, string>
+    categories: string[]
+    categoriesIds: string[]
+    link: string
+    description: string
+    items: SearchItem[]
+    itemMetadata: {
+      items: SearchMetadataItem[]
+    }
+    titleTag: string
+    Specifications?: string[]
+    allSpecifications?: string[]
+    allSpecificationsGroups?: string[]
+    completeSpecifications?: CompleteSpecification[]
+    skuSpecifications?: SkuSpecification[]
+  }
+
+  interface SearchMetadataItem {
+    Name: string
+    NameComplete: string
+    MainImage: string
+    BrandName: string
+    CategoryId: number
+    ProductId: number
+    id: string
+    seller: string
+    assemblyOptions: AssemblyOption[]
+  }
+
+  interface AssemblyOption {
+    id: string
+    name: string
+    composition: Composition | null
+    inputValues: InputValues
+  }
+
+  interface Composition {
+    minQuantity: number
+    maxQuantity: number
+    items: CompositionItem[]
+  }
+
+  interface CompositionItem {
+    id: string
+    minQuantity: number
+    maxQuantity: number
+    initialQuantity: number
+    priceTable: string
+    seller: string
+  }
+
+  interface InputValues {
+    [key: string]: RawInputValue
+  }
+
+  interface RawInputValue {
+    maximumNumberOfCharacters: number
+    domain: string[]
+  }
+
+  interface CompleteSpecification {
+    Values: Array<{
+      Id: string
+      Position: number
+      Value: string
+    }>
+    Name: string
+    Position: number
+    IsOnProductDetails: boolean
+    FieldId: string
+  }
+
+  interface SkuSpecification {
+    field: SKUSpecificationField
+    values: SKUSpecificationValue[]
+  }
+
+  interface SKUSpecificationField {
+    name: string
+    originalName?: string
+    id?: string
+  }
+
+  interface SKUSpecificationValue {
+    name: string
+    id?: string
+    fieldId?: string
+    originalName?: string
   }
 }

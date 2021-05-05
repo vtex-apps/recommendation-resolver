@@ -1,3 +1,5 @@
+import Checkout from './clients/checkout'
+
 interface CommertialOfferProps {
   price: number
   oldPrice: number
@@ -157,7 +159,7 @@ export const resolveSKU = (
     itemId: sku.id,
     name: sku.name ?? product.name,
     nameComplete: sku.nameComplete ?? product.name,
-    complementName: product.name,
+    complementName: sku.complementName ?? '',
     ean: sku.ean,
     measurementUnit: product.measurementUnit,
     unitMultiplier: product.unitMultiplier,
@@ -316,4 +318,54 @@ export const objToNameValue = (
     acc.push({ [keyName]: key, [valueName]: value })
     return acc
   }, [] as Array<Record<string, string>>)
+}
+
+export const getPrivateSellers = async (
+  checkout: Checkout,
+  tradePolicy?: string,
+  regionId?: string | null
+) => {
+  if (!regionId) {
+    return []
+  }
+
+  const result = await checkout.regions(regionId, tradePolicy)
+
+  return result?.find((region: Region) => region.id === regionId)?.sellers
+}
+
+export const buildFilter = async (ctx: Context) => {
+  const filters: Filter[] = []
+
+  const {
+    clients: { checkout },
+    vtex: { segment },
+  } = ctx
+
+  const tradePolicy = segment?.channel?.toString()
+  const regionId = segment?.regionId
+
+  if (tradePolicy) {
+    filters.push({
+      field: 'trade_policy',
+      value: tradePolicy,
+      condition: 'only',
+    })
+  }
+
+  const privateSellers = await getPrivateSellers(
+    checkout,
+    tradePolicy,
+    regionId
+  )
+
+  privateSellers.forEach((seller: { id: string }) => {
+    filters.push({
+      field: 'private_seller',
+      value: seller.id,
+      condition: 'only',
+    })
+  })
+
+  return filters
 }
